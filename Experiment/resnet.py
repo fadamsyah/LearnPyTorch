@@ -26,11 +26,11 @@ class ResBlock(nn.Module):
         if self.shortcut is not None: shct = self.shortcut(shct)
         x = self.conv1(x)
         x = self.bn1(x)
-        x = F.relu(x)
+        x = F.elu(x)
         x = self.conv2(x)
         x = self.bn2(x)
         x += shct
-        x = F.relu(x)
+        x = F.elu(x)
         return x
         
 class ResNetShallow(nn.Module):
@@ -45,7 +45,7 @@ class ResNetShallow(nn.Module):
         self.layer3 = self._make_layer(num_blocks[2], True)
         self.layer4 = self._make_layer(num_blocks[3], True)
         self.avgpool = nn.AdaptiveAvgPool2d((1,1))
-        self.dropout = nn.Dropout(0.4)
+        self.dropout = nn.Dropout(0.5)
         self.fc = nn.Linear(self.channels, num_classes)
         
     def _make_layer(self, num_blocks, downsample=True):
@@ -61,7 +61,7 @@ class ResNetShallow(nn.Module):
     def forward(self, x):
         x = self.conv1(x)
         x = self.bn1(x)
-        x = F.relu(x)
+        x = F.elu(x)
         
         x = self.layer1(x)
         x = self.layer2(x)
